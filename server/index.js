@@ -69,7 +69,7 @@ ${content}
           return
         }
         // 执行hexo编译
-        exec(`cd ${config.hexo.source} && hexo d`, (err, stdout) => {
+        exec(`cd ${config.hexo.source} && rm -rf public && hexo d`, (err, stdout) => {
           if (err) {
             resolve({ code: 1, errMsg: 'hexo打包部署失败' })
             return
