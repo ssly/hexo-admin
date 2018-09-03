@@ -70,7 +70,7 @@ export default {
           this.title === '' ||
           this.content === '' ||
           this.categories === '' ||
-          this.tags === ''
+          this.tags.length === 0
         ) {
           this.$message.error('信息有误，请重新提交')
           return
@@ -79,10 +79,9 @@ export default {
           title: this.title,
           content: this.content,
           categories: this.categories,
-          tags: this.tags,
+          tags: this.tags.join(','),
         }
 
-        console.log('提交前需要校验', options)
         submit(options).then(() => {
           this.title = ''
           this.content = ''
