@@ -8,15 +8,18 @@ const Koa = require('koa')
 const Router = require('koa-router')
 const statics = require('koa-static')
 const bodyParser = require('koa-bodyparser')
+const cors = require('koa2-cors');
 
 // 读取配置文件
 const configPath = path.join(__dirname, '../config/app.yml')
-const config = require('./yaml')(configPath)
+const yaml = require('./yaml')
+let config = yaml.read(configPath)
 
 const app = new Koa()
 const router = new Router()
 
 app.use(statics(path.join(__dirname, '../dist')))
+app.use(cors())
 app.use(bodyParser())
 app.use(router.routes())
 
@@ -26,6 +29,35 @@ router.get('/config/get', async ctx => {
     code: 0,
     data: config,
   }
+})
+
+router.post('/config/save', async ctx => {
+  const body = ctx.request.body
+  const source = body.source
+  const categories = body.categories
+  const tags = body.tags
+  if (!source || !categories || !tags) {
+    ctx.status = 400
+    ctx.body = '错误的参数格式'
+    return
+  }
+
+  const hexo = {
+    source,
+    categories: categories.split(/[,，]/g),
+    tags: tags.split(/[,，]/g),
+  }
+  const newConfig = { ...config, ...{ hexo } }
+  const err = await yaml.write(configPath, newConfig)
+
+  if (err) {
+    ctx.body = { code: 1, errMsg: '保存配置文件失败' }
+    return
+  }
+  // 更新当前的config文件
+  config = yaml.read(configPath)
+
+  ctx.body = body
 })
 
 // 提交文档

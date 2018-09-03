@@ -2,9 +2,10 @@
 <div>
   <div class="top-bar">
     <div>
-      <el-button @click="toPage('Config')">配置页面</el-button>
+      <el-button @click="toPageByName('Config')">配置页面</el-button>
       <el-button @click="handleSubmit">提交</el-button>
     </div>
+    <el-input class="new-input" placeholder="标题" v-model="title"></el-input>
     <el-select v-model="categories" placeholder="分类">
       <el-option
         v-for="item in categoriesOption"
@@ -14,8 +15,15 @@
         {{item}}
       </el-option>
     </el-select>
-    <el-input class="new-input" placeholder="标题" v-model="title"></el-input>
-    <el-input class="new-input" placeholder="标签(多个通过逗号分隔)" v-model="tags"></el-input>
+    <el-select multiple v-model="tags" placeholder="标签">
+      <el-option
+        v-for="item in tagsOption"
+        :key="item"
+        :value="item"
+      >
+        {{item}}
+      </el-option>
+    </el-select>
   </div>
   <el-input
     type="textarea"
@@ -27,7 +35,8 @@
 </template>
 
 <script>
-import { getConfig, submit } from '../assets/ajax'
+import { submit } from '../assets/ajax'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'HelloWorld',
@@ -36,14 +45,22 @@ export default {
       title: '',
       content: '',
       categories: '',
-      tags: '',
-      categoriesOption: [],
-      tagsOption: [],
-
+      tags: [],
     }
   },
 
+  computed: {
+    ...mapGetters([
+      'categoriesOption',
+      'tagsOption'
+    ])
+  },
+
   methods: {
+    ...mapActions([
+      'getConfig',
+    ]),
+
     handleSubmit () {
       this.$confirm('确定要提交吗?', '提示', {
         type: 'warning'
@@ -80,23 +97,14 @@ export default {
       })
     },
 
-    toPage (name) {
+    toPageByName (name) {
       this.$router.push({ name })
     }
 
   },
 
   created () {
-    // 获取字典
-    getConfig().then(res => {
-      if (res.code !== 0) {
-        return
-      }
-      console.log(res.data)
-      const data = res.data
-      this.categoriesOption = data.hexo.categories
-      this.tagsOption = data.hexo.tags
-    })
+    this.getConfig()
   }
 }
 </script>

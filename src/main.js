@@ -3,28 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import {
-  Form,
-  FormItem,
-  Button,
-  Input,
-  Select,
-  Option,
-  Message,
-  MessageBox,
-  Notification,
-} from 'element-ui'
-
-Vue.use(Form)
-Vue.use(FormItem)
-Vue.use(Button)
-Vue.use(Input)
-Vue.use(Select)
-Vue.use(Option)
-
-Vue.prototype.$notify = Notification
-Vue.prototype.$confirm = MessageBox.confirm
-Vue.prototype.$message = Message
+import store from './store'
+import './element-ui'
 
 Vue.config.productionTip = false
 
@@ -32,6 +12,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
