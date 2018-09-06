@@ -57,7 +57,7 @@ router.post('/config/save', async ctx => {
   // 更新当前的config文件
   config = yaml.read(configPath)
 
-  ctx.body = body
+  ctx.body = { code: 0 }
 })
 
 // 提交文档
@@ -101,7 +101,8 @@ ${content}
           return
         }
         // 执行hexo编译
-        exec(`cd ${config.hexo.source} && rm -rf public && hexo d`, (err, stdout) => {
+        const buildHexo = 'hexo deploy --generate'
+        exec(`cd ${config.hexo.source} && rm -rf public && ${buildHexo}`, (err, stdout) => {
           if (err) {
             resolve({ code: 1, errMsg: 'hexo打包部署失败' })
             return

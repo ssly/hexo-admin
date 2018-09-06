@@ -1,21 +1,37 @@
 import axios from 'axios'
+import { Loading } from 'element-ui'
+const loadingOptions = {
+  fullscreen: true,
+  text: '拼命加载中……',
+  lock: true,
+  background: 'rgba(0, 0, 0, .7)',
+}
 
-const HOST = ''
+const HOST = 'http://localhost:3000'
 
 function submit (data) {
+  const loading = Loading.service(loadingOptions)
   return axios.post(`${HOST}/submit`, data).then(res => {
-    console.log('response', res)
+    loading.close()
+    return res
   })
 }
 
 function saveConifg (data) {
-  return axios.post(`${HOST}/config/save`, data).then(res => {
-    console.log('response', res)
+  const loading = Loading.service(loadingOptions)
+  console.log(loading)
+  return axios.post(`${HOST}/config/save`, data).then(({ data }) => {
+    loading.close()
+    return data
   })
 }
 
 function getConfig () {
-  return axios.get(`${HOST}/config/get`).then(({ data }) => data)
+  const loading = Loading.service(loadingOptions)
+  return axios.get(`${HOST}/config/get`).then(({ data }) => {
+    loading.close()
+    return data
+  })
 }
 
 export {
