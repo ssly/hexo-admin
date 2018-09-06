@@ -19,9 +19,11 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { filterForData } from '@/assets/utils'
 
 export default {
   name: 'Config',
+
   data () {
     return {
       source: '',
@@ -60,24 +62,30 @@ export default {
 
       const data = {
         source: this.source,
-        categories: this.categories,
-        tags: this.tags,
+        categories: filterForData(this.categories),
+        tags: filterForData(this.tags),
       }
+
       this.saveConifg(data).then(() => {
+        this.updateConfig()
         this.$message({
           message: '提交成功',
           type: 'success',
         })
       })
+    },
+
+    updateConfig () {
+      this.getConfig().then(() => {
+        this.source = this.hexoSource
+        this.categories = this.categoriesOption.join(',')
+        this.tags = this.tagsOption.join(',')
+      })
     }
   },
 
   created () {
-    this.getConfig().then(() => {
-      this.source = this.hexoSource
-      this.categories = this.categoriesOption.join(',')
-      this.tags = this.tagsOption.join(',')
-    })
+    this.updateConfig()
   }
 }
 </script>
