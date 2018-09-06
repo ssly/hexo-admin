@@ -7,7 +7,7 @@ const loadingOptions = {
   background: 'rgba(0, 0, 0, .7)',
 }
 
-const HOST = 'http://localhost:3000'
+const HOST = ''
 
 function submit (data) {
   const loading = Loading.service(loadingOptions)
