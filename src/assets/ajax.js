@@ -34,8 +34,35 @@ function getConfig () {
   })
 }
 
+function getBlogList () {
+  const loading = Loading.service(loadingOptions)
+  return axios.get(`${HOST}/config/getBlogList`).then(({data}) => {
+    loading.close()
+    return data
+  })
+}
+
+function deleteByName (data) {
+  const loading = Loading.service(loadingOptions)
+  return axios.post(`${HOST}/config/delete`, data).then(({data}) => {
+    loading.close()
+    return data
+  })
+}
+
+function getDetailByName (data) {
+  const loading = Loading.service(loadingOptions)
+  return axios.get(`${HOST}/config/getDetailByName?name=${data}`).then(({data}) => {
+    loading.close()
+    return data
+  })
+}
+
 export {
   submit, // 提交文档
   getConfig, // 获取配置信息
   saveConifg, // 保存配置信息
+  getBlogList, // 获取文章列表
+  deleteByName, // 删除单条文章
+  getDetailByName, // 获取单条文章内容
 }

@@ -3,6 +3,7 @@
   <div class="top-bar">
     <div>
       <el-button @click="toPageByName('Config')">配置页面</el-button>
+      <el-button @click="toPageByName('Edit')">管理页面</el-button>
       <el-button @click="handleSubmit">提交</el-button>
     </div>
     <el-input class="new-input" placeholder="标题" v-model="title"></el-input>
@@ -43,7 +44,7 @@
 <script>
 import VueMarkdown from 'vue-markdown'
 import { mapGetters, mapActions } from 'vuex'
-import { submit } from '../assets/ajax'
+import { submit, getDetailByName } from '../assets/ajax'
 
 export default {
   name: 'HelloWorld',
@@ -118,6 +119,18 @@ export default {
 
   created () {
     this.getConfig()
+    console.log(this.$route.params.id)
+    if (this.$route.params.id) {
+      getDetailByName(this.$route.params.id).then(res => {
+        if (res.code === 0) {
+          const data = res.data
+          this.content = data.content
+          this.tags = data.tags
+          this.categories = data.categories
+          this.title = data.title
+        }
+      })
+    }
   }
 }
 </script>
