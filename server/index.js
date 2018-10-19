@@ -31,6 +31,106 @@ router.get('/config/get', async ctx => {
   }
 })
 
+// 获取所有文章的列表
+router.get('/config/getBlogList', async ctx => {
+
+  const res = await new Promise(resolve => {
+    const filePath = path.join(config.hexo.source, 'source/_posts') // md文档的路径
+    fs.readdir(filePath, (err, files) => {
+      if(err) {
+        return
+      }
+      let nameArr = new Array()
+      files.forEach(file => {
+        const name = file.replace(/\.md$/, '')
+        nameArr.push({name})
+      })
+      resolve(nameArr)
+
+    })
+  })
+  ctx.body = {
+    code: 0,
+    data: res
+  }
+})
+
+// 根据name删除某个文章
+router.post('/config/delete', async ctx => {
+  const body = ctx.request.body
+  if (!body.name) {
+    ctx.status = 400
+    ctx.body = '错误的参数格式'
+    return
+  }
+  const filePath = path.join(config.hexo.source, 'source/_posts', `${body.name}.md`)
+
+  const res = await new Promise(resolve => {
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        resolve({ code: 1, errMsg: '删除hexo文档失败' })
+        return
+      }
+
+      // 执行hexo编译
+      const buildHexo = 'hexo deploy --generate'
+      exec(`cd ${config.hexo.source} && rm -rf public && ${buildHexo}`, (err, stdout) => {
+        if (err) {
+          resolve({ code: 1, errMsg: 'hexo打包部署失败' })
+          return
+        }
+        resolve({ code: 0 })
+      })
+      
+    })
+
+  })
+  
+
+  ctx.body = res
+
+})
+
+router.get('/config/getDetailByName', async ctx => {
+  const query = ctx.request.query;
+  if (!query.name) {
+    ctx.status = 400
+    ctx.body = '错误的参数格式'
+    return
+  }
+
+  const filePath = path.join(config.hexo.source, 'source/_posts', `${query.name}.md`)
+  const res = await new Promise(resolve => {
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        resolve({ code: 1, errMsg: '查询失败' })
+        return
+      }
+
+      const dataStr = data.toString()
+      const titleStr =  dataStr.match(/^---[\s\S]*---/i)[0]
+      const content = dataStr.replace(/^---[\s\S]*---/i, '')
+
+      const title = titleStr.match(/title:([\w\W]*)(\r|\n)date/)[1].trim()
+      const categories = titleStr.match(/categories:([\w\W]*)(\r|\n)/)[1].trim()
+      const tagsStr = titleStr.match(/tags:([\w\W]*)(\r|\n)categories/)[1].trim()   
+      const tags = tagsStr.replace(/([\[\]])/g, '').replace(', ', '').split(',')
+
+      resolve({code: 0, data: {
+        content,
+        categories,
+        tags,
+        title
+      }})
+    })
+  })
+
+
+
+  ctx.body = res
+})
+
+
 router.post('/config/save', async ctx => {
   const body = ctx.request.body
   const source = body.source

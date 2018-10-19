@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { getConfig, saveConifg } from '../assets/ajax'
+import { getConfig, saveConifg, getBlogList } from '../assets/ajax'
 
 Vue.use(Vuex)
 
@@ -12,7 +12,8 @@ const store = new Vuex.Store({
       source: '',
       tags: [],
       categories: [],
-    }
+    },
+    blogLists: []
   },
 
   getters: {
@@ -27,6 +28,9 @@ const store = new Vuex.Store({
       state.hexo.categories = data.hexo.categories
       state.hexo.tags = data.hexo.tags
     },
+    setBlogList (state, data) {
+      state.blogLists = data
+    }
   },
 
   actions: {
@@ -45,6 +49,15 @@ const store = new Vuex.Store({
           return
         }
         context.dispatch('getConfig')
+      })
+    },
+
+    getBlogList ({commit}) {
+      getBlogList().then(res => {
+        if (res.code !== 0) {
+          return
+        }
+        commit('setBlogList', res.data)
       })
     }
   }
