@@ -108,13 +108,13 @@ router.get('/config/getDetailByName', async ctx => {
       }
 
       const dataStr = data.toString()
-      const titleStr =  dataStr.match(/^---[\s\S]*---/i)[0]
-      const content = dataStr.replace(/^---[\s\S]*---/i, '')
+      const titleStr =  dataStr.match(/^---([^-]+-{0,2}[^-]*)+---/i)[0]
+      const content = dataStr.replace(/^---([^-]+-{0,2}[^-]*)+---/i, '')
 
       const title = titleStr.match(/title:([\w\W]*)(\r|\n)date/)[1].trim()
-      const categories = titleStr.match(/categories:([\w\W]*)(\r|\n)/)[1].trim()
-      const tagsStr = titleStr.match(/tags:([\w\W]*)(\r|\n)categories/)[1].trim()   
-      const tags = tagsStr.replace(/([\[\]])/g, '').replace(', ', '').split(',')
+      const categories = ~titleStr.indexOf('categories') ? titleStr.match(/categories:([\w\W]*)(\r|\n)tags/)[1].trim()
+      const tagsStr = titleStr.match(/tags:([\w\W]*)(\r|\n)/)[1].trim()   
+      const tags = tagsStr.replace(/([\[\]])/g, '').replace(', ', ',').split(',')
 
       resolve({code: 0, data: {
         content,
@@ -195,6 +195,17 @@ ${content}
     fs.writeFile(filePath, markdown, () => {
       const sourceFile = path.join(__dirname, fileName)
       const targetFile = path.join(config.hexo.source, 'source/_posts', fileName)
+      
+      if(body.name) {
+        const oldFilePath = path.join(config.hexo.source, 'source/_posts', `${body.name}.md`)
+        fs.unlinkSync(oldFilePath, err => {
+          if (err) {
+            resolve({ code: 1, errMsg: '删除原hexo文档失败'})
+            return
+          }
+        })
+      }
+      
       fs.rename(sourceFile, targetFile, err => {
         if (err) {
           resolve({ code: 1, errMsg: '生成hexo文档失败' })
@@ -240,8 +251,9 @@ function formatTags (tagString) {
     newTags += tagList[0]
   } else {
     tagList.forEach(tag => {
-      newTags += `\n  - ${tag}`
+      newTags += newTags === 'tags: ' ? `[${tag}` : `, ${tag}`
     })
+    newTags += ']'
   }
   return newTags
 }
