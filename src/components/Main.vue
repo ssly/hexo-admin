@@ -96,6 +96,7 @@ export default {
           content: this.content,
           categories: this.categories,
           tags: this.tags.join(','),
+          name: this.$route.params.id || ''
         }
 
         submit(options).then(() => {
