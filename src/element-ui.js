@@ -11,7 +11,15 @@ import {
   MessageBox,
   Notification,
   Icon,
+  Container,
+  Header,
+  Main,
+  Footer,
   Loading,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  Dialog,
 } from 'element-ui'
 
 Vue.use(Form)
@@ -21,6 +29,14 @@ Vue.use(Input)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Icon)
+Vue.use(Container)
+Vue.use(Header)
+Vue.use(Main)
+Vue.use(Footer)
+Vue.use(Dropdown)
+Vue.use(DropdownItem)
+Vue.use(DropdownMenu)
+Vue.use(Dialog)
 
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$notify = Notification

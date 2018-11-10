@@ -1,15 +1,11 @@
 <template>
 <div>
   <div class="top-bar">
-    <div>
-      <el-button @click="toPageByName('Config')">配置页面</el-button>
-      <el-button @click="toPageByName('Edit')">管理页面</el-button>
-      <el-button @click="handleSubmit">提交</el-button>
-    </div>
+
     <el-input class="new-input" placeholder="标题" v-model="title"></el-input>
     <el-select v-model="categories" placeholder="分类">
       <el-option
-        v-for="item in categoriesOption"
+        v-for="item in categorieList"
         :key="item"
         :value="item"
       >
@@ -18,13 +14,14 @@
     </el-select>
     <el-select multiple v-model="tags" placeholder="标签">
       <el-option
-        v-for="item in tagsOption"
+        v-for="item in tagList"
         :key="item"
         :value="item"
       >
         {{item}}
       </el-option>
     </el-select>
+    <el-button @click="handleSubmit">提交</el-button>
   </div>
   <div class="main-container">
     <div class="left-container">
@@ -46,11 +43,13 @@ import VueMarkdown from 'vue-markdown'
 import { mapGetters, mapActions } from 'vuex'
 import { submit, getDetailByName } from '../assets/ajax'
 
+
+
 export default {
   name: 'HelloWorld',
 
   components: {
-    VueMarkdown
+    VueMarkdown,
   },
 
   data () {
@@ -66,14 +65,23 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
-      'categoriesOption',
-      'tagsOption'
+    ...mapGetters('config', [
+      'hexoObject',
     ]),
+
+    categorieList () {
+      const { categories } = this.hexoObject
+      return String(categories).split(',')
+    },
+
+    tagList () {
+      const { tags } = this.hexoObject
+      return String(tags).split(',')
+    }
   },
 
   methods: {
-    ...mapActions([
+    ...mapActions('config', [
       'getConfig',
     ]),
 
@@ -88,7 +96,11 @@ export default {
           this.categories === '' ||
           this.tags.length === 0
         ) {
-          this.$message.error('信息有误，请重新提交')
+          this.$message({
+            showClose: true,
+            message: '信息有误，请重新提交',
+            type: 'error',
+          })
           return
         }
         const options = {
@@ -106,20 +118,18 @@ export default {
           this.tags = ''
 
           this.$message({
+            showClose: true,
             message: '提交成功',
             type: 'success',
           })
         })
       }).catch(err => err)
     },
-
-    toPageByName (name) {
-      this.$router.push({ name })
-    },
   },
 
   created () {
     this.getConfig()
+
     console.log(this.$route.params.id)
     if (this.$route.params.id) {
       getDetailByName(this.$route.params.id).then(res => {

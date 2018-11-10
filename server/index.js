@@ -81,11 +81,11 @@ router.post('/config/delete', async ctx => {
         }
         resolve({ code: 0 })
       })
-      
+
     })
 
   })
-  
+
 
   ctx.body = res
 
@@ -112,8 +112,8 @@ router.get('/config/getDetailByName', async ctx => {
       const content = dataStr.replace(/^---([^-]+-{0,2}[^-]*)+---/i, '')
 
       const title = titleStr.match(/title:([\w\W]*)(\r|\n)date/)[1].trim()
-      const categories = ~titleStr.indexOf('categories') ? titleStr.match(/categories:([\w\W]*)(\r|\n)tags/)[1].trim()
-      const tagsStr = titleStr.match(/tags:([\w\W]*)(\r|\n)/)[1].trim()   
+      const categories = ~titleStr.indexOf('categories') ? titleStr.match(/categories:([\w\W]*)(\r|\n)tags/)[1].trim() : ''
+      const tagsStr = titleStr.match(/tags:([\w\W]*)(\r|\n)/)[1].trim()
       const tags = tagsStr.replace(/([\[\]])/g, '').replace(', ', ',').split(',')
 
       resolve({code: 0, data: {
@@ -144,8 +144,8 @@ router.post('/config/save', async ctx => {
 
   const hexo = {
     source,
-    categories: categories.split(/[,，]/g),
-    tags: tags.split(/[,，]/g),
+    categories,
+    tags,
   }
   const newConfig = { ...config, ...{ hexo } }
   const err = await yaml.write(configPath, newConfig)
@@ -195,7 +195,7 @@ ${content}
     fs.writeFile(filePath, markdown, () => {
       const sourceFile = path.join(__dirname, fileName)
       const targetFile = path.join(config.hexo.source, 'source/_posts', fileName)
-      
+
       if(body.name) {
         const oldFilePath = path.join(config.hexo.source, 'source/_posts', `${body.name}.md`)
         fs.unlinkSync(oldFilePath, err => {
@@ -205,7 +205,7 @@ ${content}
           }
         })
       }
-      
+
       fs.rename(sourceFile, targetFile, err => {
         if (err) {
           resolve({ code: 1, errMsg: '生成hexo文档失败' })
