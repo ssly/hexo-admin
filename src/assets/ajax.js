@@ -17,9 +17,8 @@ function submit (data) {
   })
 }
 
-function saveConifg (data) {
+function saveConfig (data) {
   const loading = Loading.service(loadingOptions)
-  console.log(loading)
   return axios.post(`${HOST}/config/save`, data).then(({ data }) => {
     loading.close()
     return data
@@ -30,7 +29,10 @@ function getConfig () {
   const loading = Loading.service(loadingOptions)
   return axios.get(`${HOST}/config/get`).then(({ data }) => {
     loading.close()
-    return data
+    if (data.code !== 0) {
+      return {}
+    }
+    return data.data
   })
 }
 
@@ -61,7 +63,7 @@ function getDetailByName (data) {
 export {
   submit, // 提交文档
   getConfig, // 获取配置信息
-  saveConifg, // 保存配置信息
+  saveConfig, // 保存配置信息
   getBlogList, // 获取文章列表
   deleteByName, // 删除单条文章
   getDetailByName, // 获取单条文章内容
