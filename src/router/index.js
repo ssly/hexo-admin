@@ -1,26 +1,19 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Create from '@/components/create'
-import Edit from '@/components/EditPage'
+import Create from '@/components/create-page'
+import Index from '@/components/index'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/list',
-      name: 'list',
-      component: Create,
+      path: '/',
+      component: Index,
     },
     {
       path: '/create',
-      name: 'create',
       component: Create,
-    },
-    {
-      path: '/edit',
-      name: 'edit',
-      component: Edit,
     },
   ]
 })

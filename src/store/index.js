@@ -33,6 +33,8 @@ const store = new Vuex.Store({
           return
         }
         commit('setBlogList', res.data)
+      }).catch(() => {
+        commit('setBlogList', [])
       })
     }
   }

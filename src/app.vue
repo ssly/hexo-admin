@@ -3,16 +3,19 @@
     <el-container>
       <el-header>
         <strong>Hexo在线管理系统</strong>
-        <el-button
-          icon="el-icon-tickets"
-          @click="toPageByName('list')"
-        ></el-button>
-        <el-button
-          icon="el-icon-plus"
-          @click="toPageByName('create')"
-        ></el-button>
-        <el-button @click="toPageByName('edit')">管理页面</el-button>
-        <config></config>
+        <div>
+          <el-button
+            icon="el-icon-tickets"
+            @click="toPageByPath('/')"
+          ></el-button>
+          <el-button
+            icon="el-icon-plus"
+            @click="toPageByPath('/create')"
+          ></el-button>
+          <div class="config-container">
+            <config></config>
+          </div>
+        </div>
       </el-header>
       <el-alert
         v-if="pageSuccess && !hexoObject.source"
@@ -59,6 +62,10 @@ export default {
     toPageByName (name) {
       this.$router.push({ name })
     },
+
+    toPageByPath (path) {
+      this.$router.push({ path })
+    },
   },
 
   created () {
@@ -77,11 +84,8 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-
-.el-aside {
-  background-color: #D3DCE6;
-  color: #333;
-  text-align: center;
-  line-height: 200px;
+.config-container {
+  display: inline-block;
+  margin-left: 10px;
 }
 </style>
