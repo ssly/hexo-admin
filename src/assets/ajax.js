@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Loading } from 'element-ui'
+import { Loading, Message } from 'element-ui'
 const loadingOptions = {
   fullscreen: true,
   text: '拼命加载中……',
@@ -22,6 +22,10 @@ function saveConfig (data) {
   return axios.post(`${HOST}/config/save`, data).then(({ data }) => {
     loading.close()
     return data
+  }).catch(({ response }) => {
+    loading.close()
+    Message.error(response.data)
+    throw new Error(response.data)
   })
 }
 

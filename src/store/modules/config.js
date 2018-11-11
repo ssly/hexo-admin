@@ -19,9 +19,9 @@ const getters = {
 
 const mutations = {
   getConfig (state, data) {
-    state.hexo.source = data.hexo.source
-    state.hexo.categories = data.hexo.categories
-    state.hexo.tags = data.hexo.tags
+    state.hexo.source = data.hexo.source || ''
+    state.hexo.categories = data.hexo.categories || ''
+    state.hexo.tags = data.hexo.tags || ''
   },
 }
 

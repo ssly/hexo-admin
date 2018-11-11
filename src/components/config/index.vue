@@ -1,12 +1,9 @@
 <template>
-<div class="config-index">
+<div class="config-index-page">
   <el-dropdown @command="handleCommand">
-    <el-button>
-      设置<i class="el-icon-arrow-down el-icon--right"></i>
-    </el-button>
+    <el-button icon="el-icon-more-outline"></el-button>
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item command="hexoConfig">hexo 配置</el-dropdown-item>
-      <el-dropdown-item>文档编辑</el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
 
@@ -47,10 +44,7 @@ export default {
 </script>
 
 <style scope lang="less">
-.config-index {
+.config-index-page {
   display: inline-block;
-
-  .container {
-  }
 }
 </style>

@@ -3,10 +3,24 @@
     <el-container>
       <el-header>
         <strong>Hexo在线管理系统</strong>
-        <el-button @click="toPageByName('Main')">内容编辑</el-button>
-        <el-button @click="toPageByName('Edit')">管理页面</el-button>
+        <el-button
+          icon="el-icon-tickets"
+          @click="toPageByName('list')"
+        ></el-button>
+        <el-button
+          icon="el-icon-plus"
+          @click="toPageByName('create')"
+        ></el-button>
+        <el-button @click="toPageByName('edit')">管理页面</el-button>
         <config></config>
       </el-header>
+      <el-alert
+        v-if="pageSuccess && !hexoObject.source"
+        title="请先点击右上角设置，配置hexo路径，否则将影响功能"
+        type="warning"
+        show-icon
+        :closable="false"
+      ></el-alert>
       <el-main>
         <router-view/>
       </el-main>
@@ -15,6 +29,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import Config from '@/components/config/index'
 
 export default {
@@ -24,11 +39,33 @@ export default {
     Config,
   },
 
+  data () {
+    return {
+      pageSuccess: false, // 页面加载完成
+    }
+  },
+
+  computed: {
+    ...mapGetters('config', [
+      'hexoObject',
+    ]),
+  },
+
   methods: {
+    ...mapActions('config', [
+      'getConfig',
+    ]),
+
     toPageByName (name) {
       this.$router.push({ name })
     },
-  }
+  },
+
+  created () {
+    this.getConfig().then(isSuccess => {
+      this.pageSuccess = true
+    })
+  },
 }
 </script>
 
@@ -36,8 +73,9 @@ export default {
 .el-header, .el-footer {
   background-color: #B3C0D1;
   color: #333;
-  /* text-align: center; */
-  line-height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .el-aside {

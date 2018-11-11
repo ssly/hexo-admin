@@ -20,6 +20,7 @@ import {
   DropdownItem,
   DropdownMenu,
   Dialog,
+  Alert,
 } from 'element-ui'
 
 Vue.use(Form)
@@ -37,6 +38,7 @@ Vue.use(Dropdown)
 Vue.use(DropdownItem)
 Vue.use(DropdownMenu)
 Vue.use(Dialog)
+Vue.use(Alert)
 
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$notify = Notification

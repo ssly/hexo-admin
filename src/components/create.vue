@@ -12,7 +12,7 @@
         {{item}}
       </el-option>
     </el-select>
-    <el-select multiple v-model="tags" placeholder="标签">
+    <el-select multiple collapse-tags v-model="tags" placeholder="标签">
       <el-option
         v-for="item in tagList"
         :key="item"
@@ -40,10 +40,8 @@
 
 <script>
 import VueMarkdown from 'vue-markdown'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import { submit, getDetailByName } from '../assets/ajax'
-
-
 
 export default {
   name: 'HelloWorld',
@@ -81,10 +79,6 @@ export default {
   },
 
   methods: {
-    ...mapActions('config', [
-      'getConfig',
-    ]),
-
     handleSubmit () {
       this.$confirm('确定要提交吗?', '提示', {
         type: 'warning'
@@ -128,9 +122,7 @@ export default {
   },
 
   created () {
-    this.getConfig()
-
-    console.log(this.$route.params.id)
+    console.log('this.$route.params.id', this.$route.params.id)
     if (this.$route.params.id) {
       getDetailByName(this.$route.params.id).then(res => {
         if (res.code === 0) {

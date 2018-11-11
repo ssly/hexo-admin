@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 import config from '@/store/modules/config'
 
-import { getConfig, saveConfig, getBlogList } from '../assets/ajax'
+import { getBlogList } from '../assets/ajax'
 
 Vue.use(Vuex)
 
