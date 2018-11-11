@@ -8,16 +8,22 @@
       label-width="160px"
       ref="hexoForm"
       :model="hexoItem"
-      :rules="rules"
     >
+      <el-alert
+        class="tips-item"
+        :title="tips"
+        type="warning"
+        show-icon
+        :closable="false"
+      ></el-alert>
       <el-form-item label="hexo 目录：" prop="source">
         <el-input v-model="hexoItem.source"></el-input>
       </el-form-item>
       <el-form-item label="文档分类：" prop="categories">
-        <el-input v-model="hexoItem.categories"></el-input>
+        <el-input placeholder="多个以 , 分割" v-model="hexoItem.categories"></el-input>
       </el-form-item>
       <el-form-item label="文档标签：" prop="tags">
-        <el-input v-model="hexoItem.tags"></el-input>
+        <el-input placeholder="多个以 , 分割" v-model="hexoItem.tags"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -36,15 +42,13 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   data () {
     return {
+      tips: '请正确配置您的 hexo 根目录，否则功能将无法使用',
       isVisible: false, // 弹窗是否显示
       hexoItem: { // hexo 对象数据
         source: '',
         categories: '',
         tags: '',
       },
-      rules: { // 校验规则对象
-        source: [{ required: true, message: 'hexo 路径不能为空', trigger: 'change' }],
-      }
     }
   },
 
@@ -64,16 +68,11 @@ export default {
     initModal () {
       // 弹窗打开的时候初始化
       this.getConfig().then(isSuccess => {
-        console.log('isSuccess', isSuccess, this.hexoObject)
         const { source, categories, tags } = this.hexoObject
         this.hexoItem.source = source
         this.hexoItem.categories = categories
         this.hexoItem.tags = tags
       })
-      // getConfig().then(data => {
-      //   console.log('弹窗初始化', data)
-      //   console.log(this.hexoItem)
-      // })
     },
 
     // 打开或关闭弹窗
@@ -95,7 +94,7 @@ export default {
         const data = { source, categories, tags }
         this.saveConfig(data).then(() => {
           this.openModal(false)
-        })
+        }).catch(() => {})
       })
     },
 
@@ -106,3 +105,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.tips-item {
+  margin-bottom: 30px;
+}
+</style>

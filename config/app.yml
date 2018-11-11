@@ -1,8 +1,5 @@
-# port
 port: 3000
-
-# hexo配置
 hexo:
-  source: /Users/liuyang/Documents/blog
-  tags: []
-  categories: ['CSS', 'JavaScript', '技术文档', '环境搭建', '随笔散文']
+    source:
+    categories:
+    tags:

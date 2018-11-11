@@ -8,13 +8,18 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
+      path: '/list',
+      name: 'list',
+      component: Create,
+    },
+    {
       path: '/create',
       name: 'create',
       component: Create,
     },
     {
       path: '/edit',
-      name: 'Edit',
+      name: 'edit',
       component: Edit,
     },
   ]
