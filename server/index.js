@@ -37,7 +37,8 @@ router.get('/config/getBlogList', async ctx => {
   const res = await new Promise(resolve => {
     const filePath = path.join(config.hexo.source, 'source/_posts') // md文档的路径
     fs.readdir(filePath, (err, files) => {
-      if(err) {
+      if (err) {
+        resolve(false)
         return
       }
       let nameArr = new Array()
@@ -46,9 +47,14 @@ router.get('/config/getBlogList', async ctx => {
         nameArr.push({name})
       })
       resolve(nameArr)
-
     })
   })
+  if (res === false) {
+    ctx.status = 400
+    ctx.body = 'hexo 路径无效'
+    return
+  }
+
   ctx.body = {
     code: 0,
     data: res

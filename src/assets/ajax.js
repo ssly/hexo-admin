@@ -45,6 +45,10 @@ function getBlogList () {
   return axios.get(`${HOST}/config/getBlogList`).then(({data}) => {
     loading.close()
     return data
+  }).catch(({ response }) => {
+    loading.close()
+    Message.error(response.data)
+    throw new Error(response.data)
   })
 }
 

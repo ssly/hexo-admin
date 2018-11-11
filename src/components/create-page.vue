@@ -111,11 +111,10 @@ export default {
           this.categories = ''
           this.tags = ''
 
-          this.$message({
-            showClose: true,
-            message: '提交成功',
-            type: 'success',
-          })
+          // 提交成功后返回首页
+          setTimeout(() => {
+            this.$router.push({ path: '/' })
+          }, 200)
         })
       }).catch(err => err)
     },
