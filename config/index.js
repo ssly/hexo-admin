@@ -4,16 +4,20 @@
 
 const path = require('path')
 
+// 读取配置文件
+const configPath = path.join(__dirname, './app.yml')
+const yaml = require('../server/yaml')
+let config = yaml.read(configPath)
+
 module.exports = {
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/config': {
-        target: "http://192.168.1.106:3000",
-        changeOrigin:true
+      '/api': {
+        target: `http://localhost:${config.port}`,
+        changeOrigin: true,
       }
     },
 

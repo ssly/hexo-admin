@@ -19,7 +19,7 @@
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { deleteByName } from '../assets/ajax'
 export default {
-  data() {
+  data () {
     return {}
   },
 

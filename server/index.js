@@ -24,7 +24,7 @@ app.use(bodyParser())
 app.use(router.routes())
 
 // 获取配置文件
-router.get('/config/get', async ctx => {
+router.get('/api/config/get', async ctx => {
   ctx.body = {
     code: 0,
     data: config,
@@ -32,7 +32,7 @@ router.get('/config/get', async ctx => {
 })
 
 // 获取所有文章的列表
-router.get('/config/getBlogList', async ctx => {
+router.get('/api/config/getBlogList', async ctx => {
 
   const res = await new Promise(resolve => {
     const filePath = path.join(config.hexo.source, 'source/_posts') // md文档的路径
@@ -62,7 +62,7 @@ router.get('/config/getBlogList', async ctx => {
 })
 
 // 根据name删除某个文章
-router.post('/config/delete', async ctx => {
+router.post('/api/config/delete', async ctx => {
   const body = ctx.request.body
   if (!body.name) {
     ctx.status = 400
@@ -97,7 +97,7 @@ router.post('/config/delete', async ctx => {
 
 })
 
-router.get('/config/getDetailByName', async ctx => {
+router.get('/api/config/getDetailByName', async ctx => {
   const query = ctx.request.query;
   if (!query.name) {
     ctx.status = 400
@@ -137,7 +137,7 @@ router.get('/config/getDetailByName', async ctx => {
 })
 
 
-router.post('/config/save', async ctx => {
+router.post('/api/config/save', async ctx => {
   const body = ctx.request.body
   const source = body.source
   const categories = body.categories
@@ -167,7 +167,7 @@ router.post('/config/save', async ctx => {
 })
 
 // 提交文档
-router.post('/submit', async ctx => {
+router.post('/api/submit', async ctx => {
   const body = ctx.request.body
   const title = body.title // 标题
   const date = new Date().toLocaleString() // 发布时间
