@@ -14,17 +14,11 @@ git clone https://github.com/ssly/hexo-admin.git hexo-admin
 ### 安装
 ```bash
 cd hexo-admin
-npm install --production # 或 yarn install --production
-
-# 如果需要调整 web 界面，需下载全部依赖包
-npm install
+npm install --production
 ```
 
 ### 启动
 ```bash
-# 调试
-npm run serve
-
 # 守护进程启动，建议借助 pm2
 npm install -g pm2
 
@@ -35,8 +29,16 @@ pm2 start server/index.js
 
 http://localhost:3000
 
-> 1. 注意：本项目默认监听3000端口，可在配置文件修改
+> 1. 注意：本项目默认监听3000端口，可在配置文件( config/app.yml )修改
 > 2. 必须和 hexo项目 在同一个服务器
+
+### 调试（您可能无需调试）
+
+- 安装时，您需要下载所有依赖包
+    - `npm install`
+- 启动时，您需要同时启动前端与后台
+    - `npm run serve`
+    - `npm run start`
 
 ## 项目介绍
 
@@ -49,7 +51,7 @@ http://localhost:3000
 │   ├── index.html
 │   └── static
 ├── src             // 静态资源源码
-├── server          // hexo-admin 核心代码
+├── server          // hexo-admin 服务端代码
 │   ├── index.js
 │   └── yaml.js
 └── src
