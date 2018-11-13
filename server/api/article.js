@@ -15,7 +15,8 @@ module.exports = function (router) {
   // 获取所有文章的列表
   router.get('/api/config/getBlogList', async ctx => {
     const res = await new Promise(resolve => {
-      const filePath = path.join(config.hexo.source, 'source/_posts') // md文档的路径
+      const source = config.hexo.source || ''
+      const filePath = path.join(source, 'source/_posts') // md文档的路径
       fs.readdir(filePath, (err, files) => {
         if (err) {
           resolve(false)
