@@ -1,5 +1,5 @@
 port: 3000
 hexo:
-    source:
-    categories:
-    tags:
+    source: /Users/liuyang/Documents/ly/blog
+    categories: '环境搭建,JS代码,哈哈哈'
+    tags: 'CSS,设计模式,JS相关'

@@ -6,9 +6,11 @@ const path = require('path')
 const fs = require('fs')
 const exec = require('child_process').exec
 
+const yaml = require('../yaml')
+const utils = require('../utils')
+
 // 读取配置文件
 const configPath = path.join(__dirname, '../../config/app.yml')
-const yaml = require('../yaml')
 let config = yaml.read(configPath)
 
 /**
@@ -79,7 +81,7 @@ module.exports = function (router) {
   router.post('/api/submit', async ctx => {
     const body = ctx.request.body
     const title = body.title // 标题
-    const date = new Date().toLocaleString() // 发布时间
+    const date = utils.getNowTime() // 发布时间
     const categories = body.categories // 分类
     const content = body.content // 正文
     const tags = formatTags(body.tags) // 标签

@@ -10,7 +10,7 @@
           ></el-button>
           <el-button
             icon="el-icon-plus"
-            @click="toPageByPath('/create')"
+            @click="toPageByPath('/article')"
           ></el-button>
           <div class="config-container">
             <config></config>

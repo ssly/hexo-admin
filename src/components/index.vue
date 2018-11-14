@@ -59,7 +59,7 @@ export default {
         .catch(err => err)
     },
     editPage (name) {
-      this.$router.push({ path: `/${name}` })
+      this.$router.push({ path: `/article/${name}` })
     }
   },
   created () {

@@ -6,12 +6,14 @@
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit",
     "build": "node build/build.js",
-    "serve": "node server/index.js"
+    "serve": "nodemon server/index.js",
+    "start": "pm2 start server/index.js",
+    "restart": "pm2 restart server/index.js",
+    "stop": "pm2 delete server/index.js"
   },
   "dependencies": {
     "koa": "^2.5.2",
@@ -19,6 +21,7 @@
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "koa2-cors": "^2.0.6",
+    "pm2": "^3.2.2",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
@@ -63,6 +66,7 @@
     "less-loader": "^4.1.0",
     "nightwatch": "^0.9.12",
     "node-notifier": "^5.1.2",
+    "nodemon": "^1.18.6",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "ora": "^1.2.0",
     "portfinder": "^1.0.13",

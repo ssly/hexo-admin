@@ -9,13 +9,12 @@ const exec = require('child_process').exec
 // 读取配置文件
 const configPath = path.join(__dirname, '../../config/app.yml')
 const yaml = require('../yaml')
-let config = yaml.read(configPath)
 
 module.exports = function (router) {
   // 获取所有文章的列表
   router.get('/api/config/getBlogList', async ctx => {
+    const source = yaml.read(configPath).hexo.source || ''
     const res = await new Promise(resolve => {
-      const source = config.hexo.source || ''
       const filePath = path.join(source, 'source/_posts') // md文档的路径
       fs.readdir(filePath, (err, files) => {
         if (err) {
@@ -23,9 +22,16 @@ module.exports = function (router) {
           return
         }
         let nameArr = []
-        files.forEach(file => {
+        files.forEach((file, index) => {
           const name = file.replace(/\.md$/, '')
-          nameArr.push({name})
+          const fileContent = fs.readFileSync(path.join(source, 'source/_posts', file), 'utf-8')
+          const dataReg = /date: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/
+          const updateTime = (fileContent.match(dataReg) || [])[1]
+          nameArr.push({ name, updateTime })
+        })
+        // 按时间顺序排列
+        nameArr.sort((a, b) => {
+          return new Date(b.updateTime).getTime() - new Date(a.updateTime).getTime()
         })
         resolve(nameArr)
       })
@@ -44,13 +50,14 @@ module.exports = function (router) {
 
   // 根据name删除某个文章
   router.post('/api/config/delete', async ctx => {
+    const source = yaml.read(configPath).hexo.source || ''
     const body = ctx.request.body
     if (!body.name) {
       ctx.status = 400
       ctx.body = '错误的参数格式'
       return
     }
-    const filePath = path.join(config.hexo.source, 'source/_posts', `${body.name}.md`)
+    const filePath = path.join(source, 'source/_posts', `${body.name}.md`)
 
     const res = await new Promise(resolve => {
       fs.unlink(filePath, (err) => {
@@ -61,7 +68,7 @@ module.exports = function (router) {
 
         // 执行hexo编译
         const buildHexo = 'hexo deploy --generate'
-        exec(`cd ${config.hexo.source} && rm -rf public && ${buildHexo}`, (err, stdout) => {
+        exec(`cd ${source} && rm -rf public && ${buildHexo}`, (err, stdout) => {
           if (err) {
             resolve({ code: 1, errMsg: 'hexo打包部署失败' })
             return
@@ -76,6 +83,7 @@ module.exports = function (router) {
 
   // 查询某一篇文章
   router.get('/api/config/getDetailByName', async ctx => {
+    const source = yaml.read(configPath).hexo.source || ''
     const query = ctx.request.query
     if (!query.name) {
       ctx.status = 400
@@ -83,7 +91,7 @@ module.exports = function (router) {
       return
     }
 
-    const filePath = path.join(config.hexo.source, 'source/_posts', `${query.name}.md`)
+    const filePath = path.join(source, 'source/_posts', `${query.name}.md`)
     const res = await new Promise(resolve => {
       fs.readFile(filePath, (err, data) => {
         if (err) {
@@ -93,12 +101,12 @@ module.exports = function (router) {
 
         const dataStr = data.toString()
         const titleStr = dataStr.match(/^---([^-]+-{0,2}[^-]*)+---/i)[0]
-        const content = dataStr.replace(/^---([^-]+-{0,2}[^-]*)+---/i, '')
+        const content = dataStr.replace(/^---([^-]+-{0,2}[^-]*)+---/i, '').replace(/(^\s*)/g, '')
 
         const title = titleStr.match(/title:([\w\W]*)(\r|\n)date/)[1].trim()
         const categories = ~titleStr.indexOf('categories') ? titleStr.match(/categories:([\w\W]*)(\r|\n)tags/)[1].trim() : ''
         const tagsStr = titleStr.match(/tags:([\w\W]*)(\r|\n)/)[1].trim()
-        const tags = tagsStr.replace(/[[]]/g, '').replace(', ', ',').split(',')
+        const tags = tagsStr.replace(/[[\] ]/g, '').split(',')
 
         resolve({
           code: 0,

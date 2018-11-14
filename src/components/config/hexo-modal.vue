@@ -42,7 +42,7 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   data () {
     return {
-      tips: '请正确配置您的 hexo 根目录，否则功能将无法使用',
+      tips: '请正确配置您的 hexo 根目录，否则功能将无法使用，改变 hexo 路径需要等待服务器重启',
       isVisible: false, // 弹窗是否显示
       hexoItem: { // hexo 对象数据
         source: '',

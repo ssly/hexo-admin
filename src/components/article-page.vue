@@ -126,8 +126,9 @@ export default {
       getDetailByName(this.$route.params.id).then(res => {
         if (res.code === 0) {
           const data = res.data
+          console.log('编辑进来的data', res.data)
           this.content = data.content
-          this.tags = data.tags
+          this.tags = data.tags // TODO 需要处理成数组
           this.categories = data.categories
           this.title = data.title
         }
