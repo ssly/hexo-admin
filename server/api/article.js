@@ -23,6 +23,10 @@ module.exports = function (router) {
         }
         let nameArr = []
         files.forEach((file, index) => {
+          // 过滤掉非 markdown 文件
+          if (file.slice(-3) !== '.md') {
+            return
+          }
           const name = file.replace(/\.md$/, '')
           const fileContent = fs.readFileSync(path.join(source, 'source/_posts', file), 'utf-8')
           const dataReg = /date: (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/
