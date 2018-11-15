@@ -12,7 +12,7 @@ const yaml = require('../yaml')
 
 module.exports = function (router) {
   // 获取所有文章的列表
-  router.get('/api/config/getBlogList', async ctx => {
+  router.get('/admin/api/config/getBlogList', async ctx => {
     const source = yaml.read(configPath).hexo.source || ''
     const res = await new Promise(resolve => {
       const filePath = path.join(source, 'source/_posts') // md文档的路径
@@ -53,7 +53,7 @@ module.exports = function (router) {
   })
 
   // 根据name删除某个文章
-  router.post('/api/config/delete', async ctx => {
+  router.post('/admin/api/config/delete', async ctx => {
     const source = yaml.read(configPath).hexo.source || ''
     const body = ctx.request.body
     if (!body.name) {
@@ -86,7 +86,7 @@ module.exports = function (router) {
   })
 
   // 查询某一篇文章
-  router.get('/api/config/getDetailByName', async ctx => {
+  router.get('/admin/api/config/getDetailByName', async ctx => {
     const source = yaml.read(configPath).hexo.source || ''
     const query = ctx.request.query
     if (!query.name) {
