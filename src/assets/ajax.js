@@ -7,7 +7,7 @@ const loadingOptions = {
   background: 'rgba(0, 0, 0, .7)',
 }
 
-const HOST = '/admin/api'
+const HOST = '/api'
 
 function submit (data) {
   const loading = Loading.service(loadingOptions)

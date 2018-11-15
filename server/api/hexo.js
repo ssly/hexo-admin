@@ -41,14 +41,14 @@ function formatTags (tagString) {
 
 module.exports = function (router) {
   // 获取 config 配置文件信息( config/app.yml )
-  router.get('/admin/api/config/get', async ctx => {
+  router.get('/api/config/get', async ctx => {
     ctx.body = {
       code: 0,
       data: config,
     }
   })
 
-  router.post('/admin/api/config/save', async ctx => {
+  router.post('/api/config/save', async ctx => {
     const body = ctx.request.body
     const source = body.source
     const categories = body.categories
@@ -78,7 +78,7 @@ module.exports = function (router) {
   })
 
   // 提交文档
-  router.post('/admin/api/submit', async ctx => {
+  router.post('/api/submit', async ctx => {
     const body = ctx.request.body
     const title = body.title // 标题
     const date = utils.getNowTime() // 发布时间
