@@ -4,7 +4,8 @@
 
 const fs = require('fs')
 const path = require('path')
-const exec = require('child_process').exec
+// const exec = require('child_process').exec
+const compile = require('../utils/compile')
 
 // 读取配置文件
 const configPath = path.join(__dirname, '../../config/app.yml')
@@ -64,21 +65,15 @@ module.exports = function (router) {
     const filePath = path.join(source, 'source/_posts', `${body.name}.md`)
 
     const res = await new Promise(resolve => {
-      fs.unlink(filePath, (err) => {
+      fs.unlink(filePath, async err => {
         if (err) {
           resolve({ code: 1, errMsg: '删除hexo文档失败' })
           return
         }
 
         // 执行hexo编译
-        const buildHexo = 'hexo deploy --generate'
-        exec(`cd ${source} && rm -rf public && ${buildHexo}`, (err, stdout) => {
-          if (err) {
-            resolve({ code: 1, errMsg: 'hexo打包部署失败' })
-            return
-          }
-          resolve({ code: 0 })
-        })
+        const result = await compile()
+        resolve(result)
       })
     })
 
