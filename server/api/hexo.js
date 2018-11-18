@@ -4,10 +4,11 @@
 
 const path = require('path')
 const fs = require('fs')
-const exec = require('child_process').exec
+// const exec = require('child_process').exec
 
 const yaml = require('../yaml')
 const utils = require('../utils')
+const compile = require('../utils/compile')
 
 // 读取配置文件
 const configPath = path.join(__dirname, '../../config/app.yml')
@@ -122,20 +123,14 @@ ${content}
           })
         }
 
-        fs.rename(sourceFile, targetFile, err => {
+        fs.rename(sourceFile, targetFile, async err => {
           if (err) {
             resolve({ code: 1, errMsg: '生成hexo文档失败' })
             return
           }
           // 执行hexo编译
-          const buildHexo = 'hexo deploy --generate'
-          exec(`cd ${config.hexo.source} && rm -rf public && ${buildHexo}`, (err, stdout) => {
-            if (err) {
-              resolve({ code: 1, errMsg: 'hexo打包部署失败' })
-              return
-            }
-            resolve({ code: 0 })
-          })
+          const result = await compile()
+          resolve(result)
         })
       })
     })
